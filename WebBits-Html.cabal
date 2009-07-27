@@ -1,5 +1,5 @@
-Name:           WebBits
-Version:        0.16
+Name:           WebBits-Html
+Version:        1.0
 Cabal-Version:	>= 1.2.3
 Copyright:      Copyright (c) 2007-2009 Arjun Guha and Spiridon Eliopoulos
 License:        LGPL
@@ -22,9 +22,6 @@ Description:
   * @BrownPLT.JavaScript.Environment@ annotates JavaScript syntax with its 
     static environment and returns a list of free identifiers.
   .
-  * @BrownPLT.JavaScript.Parser@ is a JavaScript parser that is largely based on
-    JavaScript 1.5.
-  .
   * @BrownPLT.Html.Parser@ is a permissive HTML parser.
  
 Library
@@ -34,9 +31,10 @@ Library
     base >= 4,
     mtl >= 1.1.0.1,
     parsec < 3.0.0,
-    pretty>=0.1,
+    pretty >= 0.1,
     containers >= 0.1,
-    syb >= 0.1
+    syb >= 0.1,
+    WebBits >= 1.0 && <= 2.0
   ghc-options:
     -fwarn-incomplete-patterns
   Extensions:     
@@ -48,12 +46,5 @@ Library
     BrownPLT.Html.PrettyPrint 
     BrownPLT.Html.Instances
     BrownPLT.Html.RawScript
-    BrownPLT.JavaScript 
     BrownPLT.JavaScript.HtmlEmbedding 
-    BrownPLT.JavaScript.Instances
-    BrownPLT.JavaScript.Lexer 
-    BrownPLT.JavaScript.Parser
-    BrownPLT.JavaScript.PrettyPrint
-    BrownPLT.JavaScript.Syntax 
     BrownPLT.JavaScript.Crawl
-    BrownPLT.JavaScript.Environment

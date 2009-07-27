@@ -13,6 +13,7 @@ import Text.ParserCombinators.Parsec(parse,setPosition,incSourceColumn,Column,so
 
 import BrownPLT.Html.Syntax
 import qualified BrownPLT.JavaScript as Js
+import BrownPLT.JavaScript.HtmlEmbedding
 
 
 instance Typeable SourcePos where
@@ -34,7 +35,7 @@ instance Data SourcePos where
 
 
 -- |Returns the source of the script.
-scriptSrc:: Js.ParsedJsHtml -> [String]
+scriptSrc:: ParsedJsHtml -> [String]
 scriptSrc (Element tag attrs _ _) | (map toLower tag) == "script" =
   case attributeValue "src" attrs of -- TODO: Check for type="javascript"?
     Just ""  -> []
@@ -45,11 +46,11 @@ scriptSrc _ =
 
 
 -- |Returns a list of URIs for external Javascript files referenced in the page.
-importedScripts:: Js.ParsedJsHtml -> [String]
+importedScripts:: ParsedJsHtml -> [String]
 importedScripts = everything (++) (mkQ [] scriptSrc)
 
 -- |Returns the top-level statements of a script.
-scriptText :: Js.ParsedJsHtml -> [Js.ParsedStatement]
+scriptText :: ParsedJsHtml -> [ParsedStatement]
 scriptText (Script (Js.Script _ stmts) _) = stmts
 scriptText _ = []
 
@@ -57,8 +58,8 @@ eventHandlers :: [String]
 eventHandlers = ["onload","onclick"]; 
 -- ,"onmousemove","onmouseover","onmousedown","onmouseout","onmouseup","onselectstart", "onkeypress"]
 
-attrScript :: Attribute SourcePos Js.ParsedJavaScript 
-           -> IO [Js.ParsedStatement]
+attrScript :: Attribute SourcePos ParsedJavaScript 
+           -> IO [ParsedStatement]
 attrScript (Attribute id val loc) | id `elem` eventHandlers = do
   let eventId = drop 2 id -- drop the "on" prefix
   let scriptText = if "javascript:" `isPrefixOf` val then drop 11 val else val
@@ -75,10 +76,10 @@ attrScript (Attribute id val loc) | id `elem` eventHandlers = do
     Right e -> return [Js.ExprStmt loc e]
 attrScript _ = return []
 
-inpageAttrScripts :: Js.ParsedJsHtml -> IO [Js.ParsedStatement]
+inpageAttrScripts :: ParsedJsHtml -> IO [ParsedStatement]
 inpageAttrScripts = everything (liftM2 (++)) (mkQ (return []) attrScript)
 
-inpageScripts :: Js.ParsedJsHtml -> [Js.ParsedStatement]
+inpageScripts :: ParsedJsHtml -> [ParsedStatement]
 inpageScripts = everything (++) (mkQ [] scriptText)
 
 parseJsFile path = do
@@ -89,7 +90,7 @@ parseJsFile path = do
 
 -- |Given an HTML page, crawls all external Javascript files and returns a list
 -- of statements, concatenated from all files.
-getPageJavascript:: Js.ParsedJsHtml -> IO [Js.ParsedStatement]
+getPageJavascript:: ParsedJsHtml -> IO [ParsedStatement]
 getPageJavascript page = do
   let importURIs = importedScripts page
   let inpageJs   = inpageScripts page
@@ -98,5 +99,5 @@ getPageJavascript page = do
   let unScript (Js.Script _ ss) = ss
   return $ (concatMap unScript importedScripts ++ attrScripts) ++ inpageJs
 
-getPageJavaScript:: Js.ParsedJsHtml -> IO [Js.ParsedStatement] -- monomorphism
+getPageJavaScript:: ParsedJsHtml -> IO [ParsedStatement] -- monomorphism
 getPageJavaScript = getPageJavascript
