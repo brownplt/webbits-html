@@ -1,5 +1,5 @@
 Name:           WebBits-Html
-Version:        1.0
+Version:        1.0.1
 Cabal-Version:	>= 1.2.3
 Copyright:      Copyright (c) 2007-2009 Arjun Guha and Spiridon Eliopoulos
 License:        LGPL
@@ -28,7 +28,7 @@ Library
   Hs-Source-Dirs:
     src
   Build-Depends:
-    base >= 4,
+    base >= 4 && < 5,
     mtl >= 1.1.0.1,
     parsec < 3.0.0,
     pretty >= 0.1,

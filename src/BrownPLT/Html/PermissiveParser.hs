@@ -471,6 +471,7 @@ html = do
 htmlWithWarnings :: Script s 
                  => CharParser [Warning] (Html.Html SourcePos s,[Warning])
 htmlWithWarnings = do
+  spaces 
   h <- html
   ws <- getState
   return (h,ws)
