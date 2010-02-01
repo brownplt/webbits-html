@@ -18,6 +18,7 @@ module BrownPLT.Html.PermissiveParser
   -- tokenizer is exported primarily for testing
   , tokens
   , Token
+  , Warning (..)
   ) where
 
 import Control.Monad
