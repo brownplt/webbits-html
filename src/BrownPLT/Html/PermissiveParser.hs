@@ -228,7 +228,7 @@ number = many1 digit
 -- 
 nonquotedAttribute:: CharParser [Warning]  String
 nonquotedAttribute = do
-  x <- alphaNum <|> oneOf "_"
+  x <- alphaNum <|> oneOf "#_"
   xs <- many (noneOf "/*=<>\"\'  \v\f\t\r\n")
   warn $ "non-quoted attribute value: " ++ (x:xs)
   return (x:xs)
